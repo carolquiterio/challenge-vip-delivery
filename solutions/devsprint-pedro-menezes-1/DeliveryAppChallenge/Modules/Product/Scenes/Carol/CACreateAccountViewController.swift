@@ -21,14 +21,14 @@ class CACreateAccountViewController: UIViewController {
     @IBOutlet weak var passwordErrorLabel: UILabel!
     @IBOutlet weak var createButton: UIButton!
     
-    var showPassword = true
-    var showConfirmPassword = true
+    private var showPassword = true
+    private var showConfirmPassword = true
     
-    var user = User()
-    var keyboardAppearenceManager: KeyboardAppearenceManaging?
-    var textfieldReturnKeyManager: TextfieldReturnKeyManaging?
+    private var user = User()
+    private var keyboardAppearenceManager: KeyboardAppearenceManaging?
+    private var textfieldReturnKeyManager: TextfieldReturnKeyManaging?
 
-    open override var preferredStatusBarStyle: UIStatusBarStyle {
+    internal override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
 
@@ -39,7 +39,7 @@ class CACreateAccountViewController: UIViewController {
         document.count == 11 ? "cpf" : "cnpj"
     }
     
-    override func viewDidLoad() {
+    internal override func viewDidLoad() {
         super.viewDidLoad()
         setupManagers()
         setupView()
@@ -181,7 +181,7 @@ class CACreateAccountViewController: UIViewController {
         showConfirmPassword = !showConfirmPassword
     }
 
-    func setupView() {        
+    private func setupView() {
         hideKeyboardWhenTappedAround()
         viewMain.layer.cornerRadius = 5
         createButton.layer.cornerRadius = createButton.frame.height / 2
@@ -199,7 +199,7 @@ class CACreateAccountViewController: UIViewController {
         passwordConfirmation.textContentType = .oneTimeCode
     }
 
-    func setupManagers() {
+    private func setupManagers() {
         keyboardAppearenceManager = KeyboardAppearenceManager(viewController: self,
                                                               topConstraint: contentViewTopConstraint)
 
@@ -220,7 +220,7 @@ class CACreateAccountViewController: UIViewController {
         })
     }
 
-    func updateUserProperty() {
+    private func updateUserProperty() {
         user.documentType = documentType
         let text = phoneTextField.text ?? ""
         user.phoneNumber = replacePhoneString(phone: text)
@@ -228,19 +228,19 @@ class CACreateAccountViewController: UIViewController {
         user.document = document
     }
 
-    func replacePhoneString(phone: String) -> String {
+    private func replacePhoneString(phone: String) -> String {
         return phone.replacingOccurrences(of: "(", with: "")
             .replacingOccurrences(of: ")", with: "")
             .replacingOccurrences(of: "-", with: "")
     }
 
-    func replaceDocumentString(document: String) -> String {
+    private func replaceDocumentString(document: String) -> String {
         return document.replacingOccurrences(of: ".", with: "")
             .replacingOccurrences(of: "-", with: "")
             .replacingOccurrences(of: "/", with: "")
     }
 
-    func updateMessagingToken(completion: @escaping (String)->Void) {
+    private func updateMessagingToken(completion: @escaping (String)->Void) {
         Messaging.messaging.token { result, error in
             if let error = error {
                 print("[FIREBASE] - Erro ao recuperar instance ID: \(error)")
@@ -250,7 +250,7 @@ class CACreateAccountViewController: UIViewController {
         }
     }
 
-    func startCreateAuthUser(with token: String) {
+    private func startCreateAuthUser(with token: String) {
         let user = [
             "name": self.nameTextField.text!,
             "phone_number": self.replacePhoneString(phone: self.phoneTextField.text!),
@@ -263,19 +263,19 @@ class CACreateAccountViewController: UIViewController {
         self.createUser(user)
     }
 
-    func disableCreateButton() {
+    private func disableCreateButton() {
         createButton.backgroundColor = .gray
         createButton.setTitleColor(.lightGray, for: .normal)
         createButton.isEnabled = false
     }
 
-    func enableCreateButton() {
+    private func enableCreateButton() {
         createButton.backgroundColor = .blue
         createButton.setTitleColor(.white, for: .normal)
         createButton.isEnabled = true
     }
 
-    func isFormValid() -> Bool {
+    private func isFormValid() -> Bool {
         var isValid = true
         
         if nameTextField.text!.isEmpty {
@@ -367,7 +367,7 @@ class CACreateAccountViewController: UIViewController {
         return isValid
     }
 
-    func isPhoneTextfielValid() -> Bool {
+    private func isPhoneTextfielValid() -> Bool {
         let text = replacePhoneString(phone: phoneTextField.text ?? "")
         if text.count == 11 {
             return true
@@ -376,7 +376,7 @@ class CACreateAccountViewController: UIViewController {
         }
     }
 
-    func validateCreateButton() {
+    private func validateCreateButton() {
         let isValid =  !nameTextField.text!.isEmpty
         && !phoneTextField.text!.isEmpty
         && !documentTextField.text!.isEmpty
@@ -395,7 +395,7 @@ class CACreateAccountViewController: UIViewController {
 
 // MARK: - Alamofire
 extension CACreateAccountViewController {
-    func createUser(_ parameters: [String : String]) {
+    private func createUser(_ parameters: [String : String]) {
         if !ConnectivityManager.shared.isConnected {
             let alertController = UIAlertController(title: "Sem conexão", message: "Conecte-se à internet para tentar novamente", preferredStyle: .alert)
             let actin = UIAlertAction(title: "Ok", style: .default)
@@ -423,7 +423,7 @@ extension CACreateAccountViewController {
         }
     }
 
-    func successedAPI(session: Session) {
+    private func successedAPI(session: Session) {
         user.id = session.id
         let userDefaults = UserDefaults.standard
         if let encodedSession = try? JSONEncoder().encode(session) {
@@ -436,7 +436,7 @@ extension CACreateAccountViewController {
         signInFirebase(session.token)
     }
 
-    func showDefaultError() {
+    private func showDefaultError() {
         Globals.alertMessage(
             title: "Ops",
             message: "Algo de errado aconteceu. Tente novamente mais tarde.",
@@ -447,7 +447,7 @@ extension CACreateAccountViewController {
 
 // MARK: - Firebase
 extension CACreateAccountViewController {
-    func signInFirebase(_ token: String) {
+    private func signInFirebase(_ token: String) {
         DispatchQueue.main.async {
             self.showLoading()
         }
@@ -475,11 +475,11 @@ extension CACreateAccountViewController {
 }
 
 extension CACreateAccountViewController: KeyboardAppearenceDelegate {
-    func keyboardWillShow(_ notification: Notification) {
+    internal func keyboardWillShow(_ notification: Notification) {
         keyboardAppearenceManager?.keyboardWillShow(notification)
     }
 
-    func keyboardWillHide(_ notification: Notification) {
+    internal func keyboardWillHide(_ notification: Notification) {
         keyboardAppearenceManager?.keyboardWillHide(notification)
     }
 }

@@ -12,20 +12,20 @@ class CAResetPasswordViewController: UIViewController {
     @IBOutlet weak var viewSuccess: UIView!
     @IBOutlet weak var emailLabel: UILabel!
     
-    var email = ""
-    var loadingScreen = LoadingController()
-    var isPasswordRecovered = false
+    private var email = ""
+    private var loadingScreen = LoadingController()
+    private var isPasswordRecovered = false
     
-    let coordinator = CAResetPasswordCoordinator()
-    let isEmailValid = CAIsEmailValidUseCase()
+    private let coordinator = CAResetPasswordCoordinator()
+    private let isEmailValid = CAIsEmailValidUseCase()
 
-    override func viewDidLoad() {
+    internal override func viewDidLoad() {
         super.viewDidLoad()
         coordinator.controller = self
         setupView()
     }
     
-    open override var preferredStatusBarStyle: UIStatusBarStyle {
+    internal override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
 
@@ -53,7 +53,7 @@ class CAResetPasswordViewController: UIViewController {
         }
     }
     
-    func validateForm() {
+    private func validateForm() {
         let email = emailTextfield.text
         let isEmailValid = isEmailValid.simpleValidation(email)
         
@@ -64,13 +64,13 @@ class CAResetPasswordViewController: UIViewController {
         }
     }
     
-    func onInvalidEmailTyped() {
+    private func onInvalidEmailTyped() {
         emailTextfield.setErrorColor()
         textLabel.textColor = .red
         textLabel.text = "Verifique o e-mail informado"
     }
     
-    func onValidEmailTyped() {
+    private func onValidEmailTyped() {
         self.view.endEditing(true)
         
         if !ConnectivityManager.shared.isConnected {
@@ -80,7 +80,7 @@ class CAResetPasswordViewController: UIViewController {
         }
     }
     
-    func recoverPassword() {
+    private func recoverPassword() {
         let userEmail = emailTextfield.text!.trimmingCharacters(in: .whitespaces)
         
         let parameters = [
@@ -96,7 +96,7 @@ class CAResetPasswordViewController: UIViewController {
         }
     }
     
-    func presentSuccessStyle() {
+    private func presentSuccessStyle() {
         self.isPasswordRecovered = true
         
         self.emailTextfield.isHidden = true
@@ -109,7 +109,7 @@ class CAResetPasswordViewController: UIViewController {
         self.recoverPasswordButton.setTitle("Voltar", for: .normal)
     }
     
-    func presentErrorAlert() {
+    private func presentErrorAlert() {
         coordinator.presentGenericErrorAlert()
     }
 }
@@ -117,7 +117,7 @@ class CAResetPasswordViewController: UIViewController {
 // MARK: - Comportamentos de layout
 extension CAResetPasswordViewController {
     
-    func setupView() {
+    private func setupView() {
         setupRecoverPasswordButton()
         setupLoginButton()
         setupHelpButton()
@@ -127,25 +127,25 @@ extension CAResetPasswordViewController {
         validateEmailField()
     }
     
-    func setupRecoverPasswordButton() {
+    private func setupRecoverPasswordButton() {
         recoverPasswordButton.layer.cornerRadius = recoverPasswordButton.bounds.height / 2
         recoverPasswordButton.backgroundColor = .blue
         recoverPasswordButton.setTitleColor(.white, for: .normal)
     }
     
-    func setupLoginButton() {
+    private func setupLoginButton() {
         loginButton.setupStyle(cornerRadiusHeight: createAccountButton.frame.height)
     }
     
-    func setupHelpButton() {
+    private func setupHelpButton() {
         helpButton.setupStyle(cornerRadiusHeight: createAccountButton.frame.height)
     }
     
-    func setupCreateAccountButton() {
+    private func setupCreateAccountButton() {
         createAccountButton.setupStyle(cornerRadiusHeight: createAccountButton.frame.height)
     }
     
-    func setupEmailField() {
+    private func setupEmailField() {
         emailTextfield.setDefaultColor()
         if !email.isEmpty {
             emailTextfield.text = email
@@ -169,7 +169,7 @@ extension CAResetPasswordViewController {
 
 extension CAResetPasswordViewController {
     
-    func validateEmailField() {
+    private func validateEmailField() {
         if !emailTextfield.text!.isEmpty {
             enableCreateButton()
         } else {
@@ -177,13 +177,13 @@ extension CAResetPasswordViewController {
         }
     }
     
-    func disableCreateButton() {
+    private func disableCreateButton() {
         recoverPasswordButton.backgroundColor = .gray
         recoverPasswordButton.setTitleColor(.white, for: .normal)
         recoverPasswordButton.isEnabled = false
     }
     
-    func enableCreateButton() {
+    private func enableCreateButton() {
         recoverPasswordButton.backgroundColor = .blue
         recoverPasswordButton.setTitleColor(.white, for: .normal)
         recoverPasswordButton.isEnabled = true

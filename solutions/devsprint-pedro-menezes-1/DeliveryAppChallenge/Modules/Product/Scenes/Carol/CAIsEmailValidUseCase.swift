@@ -9,7 +9,7 @@ import Foundation
 
 class CAIsEmailValidUseCase {
     
-    func simpleValidation(_ email: String?) -> Bool {
+    internal func simpleValidation(_ email: String?) -> Bool {
         let emailContainsAnyInvalidCondition = email!.isEmpty ||
             !email!.contains(".") ||
             !email!.contains("@") ||

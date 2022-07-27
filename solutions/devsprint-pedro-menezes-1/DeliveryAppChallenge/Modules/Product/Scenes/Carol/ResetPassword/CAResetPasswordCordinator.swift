@@ -10,20 +10,20 @@ import UIKit
 class CAResetPasswordCoordinator {
     var controller: UIViewController?
     
-    func navigateToCAContactUsViewController() {
+    internal func navigateToCAContactUsViewController() {
         let destinationViewController = CAContactUsViewController()
         destinationViewController.modalPresentationStyle = .popover
         destinationViewController.modalTransitionStyle = .coverVertical
         controller?.present(destinationViewController, animated: true, completion: nil)
     }
     
-    func navigateToCACreateAccountViewController() {
+    internal func navigateToCACreateAccountViewController() {
         let destinationViewController = CACreateAccountViewController()
         destinationViewController.modalPresentationStyle = .fullScreen
         controller?.present(destinationViewController, animated: true)
     }
     
-    func presentGenericErrorAlert() {
+    internal func presentGenericErrorAlert() {
         let alertController = UIAlertController(
             title: "Ops..",
             message: "Algo de errado aconteceu. Tente novamente mais tarde.",
