@@ -8,7 +8,7 @@ class CACreateAccountViewController: UIViewController {
     @IBOutlet weak var phoneTextField: UITextField!
     @IBOutlet weak var documentTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
-    @IBOutlet weak var emailConfirmation: UITextField!
+    @IBOutlet weak var emailConfirmationTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var showPasswordButton: UIButton!
     @IBOutlet weak var passwordConfirmation: UITextField!
@@ -27,6 +27,8 @@ class CACreateAccountViewController: UIViewController {
     var user = User()
     var keyboardAppearenceManager: KeyboardAppearenceManaging?
     var textfieldReturnKeyManager: TextfieldReturnKeyManaging?
+    
+    var viewModel: CACreateAccountViewModel
 
     open override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -128,11 +130,11 @@ class CACreateAccountViewController: UIViewController {
     }
     
     @IBAction func emailConfirmationBeginEditing(_ sender: Any) {
-        emailConfirmation.setEditingColorBorder()
+        emailConfirmationTextField.setEditingColorBorder()
         emailConfirmationErrorLabel.text = ""
     }
     @IBAction func emailConfirmationEndEditing(_ sender: Any) {
-        emailConfirmation.setDefaultColor()
+        emailConfirmationTextField.setDefaultColor()
     }
     
     @IBAction func passwordEditing(_ sender: Any) {
@@ -190,7 +192,7 @@ class CACreateAccountViewController: UIViewController {
         phoneTextField.setDefaultColor()
         documentTextField.setDefaultColor()
         emailTextField.setDefaultColor()
-        emailConfirmation.setDefaultColor()
+        emailConfirmationTextField.setDefaultColor()
         passwordTextField.setDefaultColor()
         passwordConfirmation.setDefaultColor()
 
@@ -208,7 +210,7 @@ class CACreateAccountViewController: UIViewController {
           phoneTextField,
           documentTextField,
           emailTextField,
-          emailConfirmation,
+          emailConfirmationTextField,
           passwordTextField,
           passwordConfirmation
         ]
@@ -278,53 +280,34 @@ class CACreateAccountViewController: UIViewController {
     func isFormValid() -> Bool {
         var isValid = true
         
-        if nameTextField.text!.isEmpty {
+        if viewModel.isFormNameValid(nameTextField.text) {
             nameTextField.setErrorColor()
             nameErrorLabel.text = "Informe seu nome completo."
-            isValid = false
-
-        } else {
-            let fullNameArr = nameTextField.text!.components(separatedBy: " ")
-            if fullNameArr.count <= 1 {
-                nameTextField.setErrorColor()
-                nameErrorLabel.text = "Informe seu nome completo."
-                isValid = false
-            }
         }
 
-        if !isPhoneTextfielValid() {
+        if !viewModel.isFormPhoneValid(phoneTextField.text) {
             phoneTextField.setErrorColor()
             phoneErrorLabel.text = "O número deve ter 11 caracteres."
-            isValid = false
         }
 
         if documentTextField.text!.isEmpty {
             documentTextField.setErrorColor()
             documentErrorLabel.text = "Informe seu CPF/CNPJ."
-            isValid = false
         }
-
-        if emailTextField.text!.isEmpty ||
-            !emailTextField.text!.contains(".") ||
-            !emailTextField.text!.contains("@") ||
-            emailTextField.text!.count <= 5 {
+        
+        if(viewModel.isEmailValid(emailTextField.text)) {
             emailTextField.setErrorColor()
             emailErrorLabel.text = "E-mail inválido."
-            isValid = false
         }
-
-        if emailConfirmation.text!.isEmpty ||
-            !emailConfirmation.text!.contains(".") ||
-            !emailConfirmation.text!.contains("@") ||
-            emailConfirmation.text!.count <= 5 {
-            emailConfirmation.setErrorColor()
+        
+        if(viewModel.isEmailValid(emailConfirmationTextField.text)) {
+            emailConfirmationTextField.setErrorColor()
             emailConfirmationErrorLabel.text = "E-mail inválido."
-            isValid = false
         }
 
-        if emailConfirmation.text?.trimmingCharacters(in: .whitespaces) != emailTextField.text?.trimmingCharacters(in: .whitespaces) {
+        if viewModel.areEmailsTheSame(emailTextField.text, emailConfirmationTextField.text)) {
             emailTextField.setErrorColor()
-            emailConfirmation.setErrorColor()
+            emailConfirmationTextField.setErrorColor()
             emailErrorLabel.text = "E-mails devem ser iguais."
             emailConfirmationErrorLabel.text = "E-mails devem ser iguais."
             isValid = false
@@ -336,44 +319,38 @@ class CACreateAccountViewController: UIViewController {
         let okayChars : Set<Character> = Set("ABCDEFGHIJKLKMNOPQRSTUVWXYZ")
         let capitalizedLetter =  String(passwordTextField.text!.filter { okayChars.contains($0) })
         if capitalizedLetter.count == 0 {
-            passwordTextField.setErrorColor()
-            passwordConfirmation.setErrorColor()
-            passwordErrorLabel.text = "A senha deve ter uma letra"
+            showPasswordError("A senha deve ter uma letra")
             isValid = false
         }
 
         let okayNumbers : Set<Character> = Set("0123456789")
         let numbersPassword =  String(passwordTextField.text!.filter { okayNumbers.contains($0) })
         if numbersPassword.count == 0 {
-            passwordTextField.setErrorColor()
-            passwordConfirmation.setErrorColor()
-            passwordErrorLabel.text = "A senha deve ter um número."
+            showPasswordError("A senha deve ter um número.")
             isValid = false
         }
 
         if passwordTextField.text!.count < 5 {
-            passwordTextField.setErrorColor()
-            passwordConfirmation.setErrorColor()
-            passwordErrorLabel.text = "A senha deve ter no mínimo 6 caracteres"
+            showPasswordError("A senha deve ter no mínimo 6 caracteres")
             isValid = false
         }
 
         if passwordConfirmation.text != passwordTextField.text {
-            passwordTextField.setErrorColor()
-            passwordConfirmation.setErrorColor()
-            passwordErrorLabel.text = "Senhas devem ser iguais."
+            showPasswordError("Senhas devem ser iguais.")
             isValid = false
         }
         return isValid
     }
 
+    func showPasswordError(_ passwordErrorText: String) {
+        passwordTextField.setErrorColor()
+        passwordConfirmation.setErrorColor()
+        passwordErrorLabel.text = passwordErrorText
+    }
+    
     func isPhoneTextfielValid() -> Bool {
         let text = replacePhoneString(phone: phoneTextField.text ?? "")
-        if text.count == 11 {
-            return true
-        } else {
-            return false
-        }
+        return text.count == 11
     }
 
     func validateCreateButton() {
@@ -381,7 +358,7 @@ class CACreateAccountViewController: UIViewController {
         && !phoneTextField.text!.isEmpty
         && !documentTextField.text!.isEmpty
         && !emailTextField.text!.isEmpty
-        && !emailConfirmation.text!.isEmpty
+        && !emailConfirmationTextField.text!.isEmpty
         && !passwordTextField.text!.isEmpty
         && !passwordConfirmation.text!.isEmpty
 

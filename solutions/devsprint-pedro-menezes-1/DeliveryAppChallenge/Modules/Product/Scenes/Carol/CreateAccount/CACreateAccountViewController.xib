@@ -22,8 +22,8 @@
                 <outlet property="createButton" destination="3IH-kg-86B" id="80k-vA-zeE"/>
                 <outlet property="documentErrorLabel" destination="phI-2o-rxd" id="3gf-Ch-cXR"/>
                 <outlet property="documentTextField" destination="yX3-VF-rEg" id="2Jo-eP-epI"/>
-                <outlet property="emailConfirmation" destination="MEu-rk-Eit" id="Os4-vx-j4C"/>
                 <outlet property="emailConfirmationErrorLabel" destination="8HF-qf-9oP" id="ykX-D5-r6t"/>
+                <outlet property="emailConfirmationTextField" destination="MEu-rk-Eit" id="Os4-vx-j4C"/>
                 <outlet property="emailErrorLabel" destination="nMV-XO-tSu" id="124-Ag-iAb"/>
                 <outlet property="emailTextField" destination="sAp-mI-YxU" id="WaD-70-PS6"/>
                 <outlet property="nameErrorLabel" destination="5up-5E-c0Q" id="uYu-Py-KSH"/>
