@@ -11,11 +11,11 @@ class CALoginViewController: UIViewController {
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var createAccountButton: UIButton!
     
-    var showPassword = true
+    private var showPassword = true
     @IBOutlet weak var showPasswordButton: UIButton!
-    var errorInLogin = false
+    private var errorInLogin = false
     
-    override func viewDidLoad() {
+    internal override func viewDidLoad() {
         super.viewDidLoad()
         verifyLogin()
 
@@ -28,11 +28,11 @@ class CALoginViewController: UIViewController {
         self.validateButton()
     }
     
-    open override var preferredStatusBarStyle: UIStatusBarStyle {
+    internal override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
 
-    func verifyLogin() {
+    private func verifyLogin() {
         if let _ = UserDefaultsManager.UserInfos.shared.readSesion() {
             let vc = UINavigationController(rootViewController: HomeViewController())
             let scenes = UIApplication.shared.connectedScenes
@@ -110,7 +110,7 @@ class CALoginViewController: UIViewController {
 // MARK: - Comportamentos de layout
 extension CALoginViewController {
     
-    func setupView() {
+    private func setupView() {
         heightLabelError.constant = 0
         loginButton.layer.cornerRadius = loginButton.frame.height / 2
         loginButton.backgroundColor = .blue
@@ -134,7 +134,7 @@ extension CALoginViewController {
     }
 
     @objc
-    func didClickView() {
+    private func didClickView() {
         view.endEditing(true)
     }
     
@@ -172,7 +172,7 @@ extension CALoginViewController {
         passwordTextField.setDefaultColor()
     }
     
-    func setErrorLogin(_ message: String) {
+    private func setErrorLogin(_ message: String) {
         errorInLogin = true
         heightLabelError.constant = 20
         errorLabel.text = message
@@ -180,7 +180,7 @@ extension CALoginViewController {
         passwordTextField.setErrorColor()
     }
     
-    func resetErrorLogin(_ textField: UITextField) {
+    private func resetErrorLogin(_ textField: UITextField) {
         heightLabelError.constant = 0
         if textField == emailTextField {
             emailTextField.setEditingColor()
@@ -194,7 +194,7 @@ extension CALoginViewController {
 
 extension CALoginViewController {
     
-    func validateButton() {
+    private func validateButton() {
         if !emailTextField.text!.contains(".") ||
             !emailTextField.text!.contains("@") ||
             emailTextField.text!.count <= 5 {
@@ -213,12 +213,12 @@ extension CALoginViewController {
         }
     }
     
-    func disableButton() {
+    private func disableButton() {
         loginButton.backgroundColor = .gray
         loginButton.isEnabled = false
     }
     
-    func enableButton() {
+    private func enableButton() {
         loginButton.backgroundColor = .blue
         loginButton.isEnabled = true
     }

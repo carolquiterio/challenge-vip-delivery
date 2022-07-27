@@ -9,7 +9,7 @@ import UIKit
 import Foundation
 
 extension UIButton {
-    func setupStyle(cornerRadiusHeight: CGFloat) {
+    internal func setupStyle(cornerRadiusHeight: CGFloat) {
         self.layer.cornerRadius = cornerRadiusHeight / 2
         self.layer.borderWidth = 1
         self.layer.borderColor = UIColor.blue.cgColor

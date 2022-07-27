@@ -9,7 +9,7 @@ import UIKit
 
 class CAContactUsViewController: UIViewController {
 
-    override func viewDidLoad() {
+    internal override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
@@ -18,7 +18,7 @@ class CAContactUsViewController: UIViewController {
 
 
 enum CAContactUsService {
-    func pegarDados() {
+    private func pegarDados() {
         let url = Endpoints.contactUs
         AF.request(url, method: .get, parameters: nil, headers: nil) { result in
             switch result {
@@ -35,7 +35,7 @@ enum CAContactUsService {
         }
     }
 
-    func enviarMensagem() {
+    private func enviarMensagem() {
         let parameters: [String: String] = [
             "email": "",
             "mensagem": ""
